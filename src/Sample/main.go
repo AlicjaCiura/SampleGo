@@ -11,7 +11,15 @@ import (
 func main() {
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		f, err := os.Open("public" + r.URL.Path)
+
+		var err error = nil
+		var f *os.File
+		//TODO
+		if r.URL.Path == "" {
+			f, err = os.Open("public/home.html")
+		} else {
+			f, err = os.Open("public" + r.URL.Path)
+		}
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			log.Println(err)
@@ -23,7 +31,7 @@ func main() {
 			contentType = "text/css"
 		case strings.HasSuffix(r.URL.Path, "html"):
 			contentType = "text/html"
-		case strings.HasSuffix(r.URL.Path, "png"):
+		case strings.HasSuffix(r.URL.Path, "images"):
 			contentType = "image/png"
 		default:
 			contentType = "text/html"

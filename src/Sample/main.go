@@ -2,7 +2,6 @@ package main
 
 import (
 	"SampleGo/src/Sample/controller"
-	"fmt"
 	"html/template"
 	"io/ioutil"
 	"net/http"
@@ -12,7 +11,7 @@ import (
 func main() {
 	templates := populateTemplates()
 	controller.Start(templates)
-	http.ListenAndServe()
+	http.ListenAndServe(":8080", nil)
 }
 
 func sayHello(name string) string {

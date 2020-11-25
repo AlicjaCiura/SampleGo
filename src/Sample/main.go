@@ -1,53 +1,53 @@
 package main
 
 import (
-	"io"
-	"log"
+	"SampleGo/src/Sample/controller"
+	"fmt"
+	"html/template"
+	"io/ioutil"
 	"net/http"
 	"os"
-	"strings"
 )
 
 func main() {
-
-	http.HandleFunc("/", page)
-	http.HandleFunc("/hello", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte(sayHello("Ala")))
-	})
-	http.NotFoundHandler()
-	http.ListenAndServe(":8000", nil)
-}
-
-func page(w http.ResponseWriter, r *http.Request) {
-
-	var err error = nil
-	var f *os.File
-	//TODO
-	if r.URL.Path == "" {
-		f, err = os.Open("public/home.html")
-	} else {
-		f, err = os.Open("public" + r.URL.Path)
-	}
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		log.Println(err)
-	}
-	defer f.Close()
-	var contentType string
-	switch {
-	case strings.HasSuffix(r.URL.Path, "css"):
-		contentType = "text/css"
-	case strings.HasSuffix(r.URL.Path, "html"):
-		contentType = "text/html"
-	case strings.HasSuffix(r.URL.Path, "images"):
-		contentType = "image/png"
-	default:
-		contentType = "text/html"
-	}
-	w.Header().Add("Content-Type", contentType)
-	io.Copy(w, f)
+	templates := populateTemplates()
+	controller.Start(templates)
+	http.ListenAndServe()
 }
 
 func sayHello(name string) string {
 	return "Hello " + name + ":)"
+}
+
+func populateTemplates() map[string]*template.Template {
+	result := make(map[string]*template.Template)
+	const basePath = "templates"
+	layout := template.Must(template.ParseFiles(basePath + "/_layout.html"))
+	template.Must(layout.ParseFiles(basePath+"/_header.html", basePath+"/_footer.html"))
+	dir, err := os.Open(basePath + "/content")
+	if err != nil {
+		panic("Failed to open template blocks directory: " + err.Error())
+	}
+	fis, err := dir.Readdir(-1)
+	if err != nil {
+		panic("Failed to read contents of content directory: " + err.Error())
+	}
+	for _, fi := range fis {
+		f, err := os.Open(basePath + "/content/" + fi.Name())
+		if err != nil {
+			panic("Failed to open template '" + fi.Name() + "'")
+		}
+		content, err := ioutil.ReadAll(f)
+		if err != nil {
+			panic("Failed to read content from file '" + fi.Name() + "'")
+		}
+		f.Close()
+		tmpl := template.Must(layout.Clone())
+		_, err = tmpl.Parse(string(content))
+		if err != nil {
+			panic("Failed to parse contents of '" + fi.Name() + "' as template")
+		}
+		result[fi.Name()] = tmpl
+	}
+	return result
 }

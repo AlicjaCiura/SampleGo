@@ -6,11 +6,35 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+
+	"encoding/json"
+	"fmt"
+	"github.com/fatih/color"
 )
+
+type detail struct {
+	Name         string
+	ID           string
+	Children     []string
+	Years        []int
+	Availability []availability
+	LastUpdate   string
+	Description  string
+}
+
+type availability struct {
+	Year      string
+	Levels    []int
+	Quarterly string
+}
 
 func main() {
 	templates := populateTemplates()
 	controller.Start(templates)
+<<<<<<< HEAD
+=======
+	test()
+>>>>>>> f863d4e... Add to readme desc links
 	http.ListenAndServe(":8080", nil)
 }
 
@@ -49,4 +73,19 @@ func populateTemplates() map[string]*template.Template {
 		result[fi.Name()] = tmpl
 	}
 	return result
+}
+
+func test() {
+resp2, err2 := http.Get("https://bdl.stat.gov.pl/api/v1/subjects/K15?lang=pl&format=json")
+	body2, err2 := ioutil.ReadAll(resp2.Body)
+	if err2 != nil {
+		panic(err2.Error())
+	}
+	var data2 detail
+	json.Unmarshal(body2, &data2)
+	color.Cyan("\nResults: %v\n\n", body2)
+	fmt.Printf("Results: [%v]\n", len(data2.Availability))
+	for _, s := range data2.Availability {
+		fmt.Println(s.Year, s.Quarterly)
+	}
 }

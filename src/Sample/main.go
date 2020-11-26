@@ -9,6 +9,7 @@ import (
 
 	"encoding/json"
 	"fmt"
+
 	"github.com/fatih/color"
 )
 
@@ -31,10 +32,6 @@ type availability struct {
 func main() {
 	templates := populateTemplates()
 	controller.Start(templates)
-<<<<<<< HEAD
-=======
-	test()
->>>>>>> f863d4e... Add to readme desc links
 	http.ListenAndServe(":8080", nil)
 }
 
@@ -76,7 +73,9 @@ func populateTemplates() map[string]*template.Template {
 }
 
 func test() {
-resp2, err2 := http.Get("https://bdl.stat.gov.pl/api/v1/subjects/K15?lang=pl&format=json")
+	//Statystyki malzenstwach
+	resp2, err2 := http.Get("https://bdl.stat.gov.pl/api/v1/subjects/G535?lang=pl&format=json")
+
 	body2, err2 := ioutil.ReadAll(resp2.Body)
 	if err2 != nil {
 		panic(err2.Error())

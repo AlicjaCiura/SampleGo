@@ -1,0 +1,26 @@
+{{define "content"}}
+<div id="content-wrapper">
+    <div class="inner clearfix">
+      <section id="main-content">
+        <h1 id="welcome-to-github-pages">Malzenstwa</h1>
+        <p>To jest strona na której bede prezentować różne statystyki na temat małżeństw w Polsce</p>
+     
+      {{range .Dataset}}
+			<div>							
+					<div class="columns small-8">
+						<h2>{{.Name}}</h2>
+            <p>{{.Size}}</p>
+            {{range .Values}}
+            <h3>{{.Year}}</h3>
+            <p>{{.Val}}</p>
+            {{end}}
+					</div>
+			</div>
+      {{end}}
+    </section>
+     <aside id="sidebar">
+        <p>Dane są z portalu  <a href="https://bdl.stat.gov.pl/BDL/start">GUS</a>.</p>
+      </aside>
+    </div>
+  </div>
+{{end}}

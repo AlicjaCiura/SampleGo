@@ -8,7 +8,7 @@ type Home struct {
 func NewHome() Home {
 	result := Home{
 		Active: "home",
-		Title:  "Koronawirus",
+		Title:  "Malzenstwa",
 	}
 	return result
 }

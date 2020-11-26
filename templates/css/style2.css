@@ -469,6 +469,11 @@ p {
     margin-top: 0
 }
 
+a#menu{
+    color: #fff;
+    display: inline;
+}
+
 a {
     color: #2879d0
 }
@@ -566,6 +571,13 @@ header a.button {
     top: 0;
     right: 0;
     background: transparent url(../images/github-button.png) 0 0 no-repeat
+}
+
+header a.menu {
+    position: absolute;
+    top: 0;
+    right: 0;
+    color : #fff
 }
 
 aside a.button {

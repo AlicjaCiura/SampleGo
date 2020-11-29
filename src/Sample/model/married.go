@@ -19,3 +19,12 @@ type Value struct {
 	Val    float64
 	AttrID int
 }
+
+type Overview struct {
+	Results []Details
+}
+
+type Details struct {
+	ID   string
+	Name string
+}

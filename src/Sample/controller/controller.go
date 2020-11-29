@@ -14,6 +14,7 @@ func Start(templates map[string]*template.Template) {
 
 	homeController.homeTemplate = templates["home.html"]
 	marriedController.marriedTemplate = templates["married.html"]
+	marriedController.overviewTemplate = templates["overview.html"]
 	homeController.registerRoutes()
 	marriedController.registerRoutes()
 	http.Handle("/images/", http.FileServer(http.Dir("public")))

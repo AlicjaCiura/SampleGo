@@ -479,7 +479,6 @@ a:hover {
 
 header {
     padding-top: 40px;
-    padding-bottom: 40px;
     font-family: 'Architects Daughter', 'Helvetica Neue', Helvetica, Arial, serif;
     background: #2e7bcf url(../images/header-bg.jpg) 0 0 repeat-x;
     border-bottom: solid 1px #275da1
@@ -568,11 +567,24 @@ header a.button {
     background: transparent url(../images/github-button.png) 0 0 no-repeat
 }
 
-header a.menu {
-    position: absolute;
-    top: 0;
-    right: 0;
-    color: #fff
+
+header #menu{
+    display: flex;
+    list-style-type: none;
+    width: 100%;
+    justify-self: center;
+}
+
+header #menu a {
+    color: #fff;
+    text-decoration: none;
+    padding: 10px 20px;
+}
+
+header #menu a:hover {
+    background: white;
+    color: #3179cd;
+    border-radius: 5px;
 }
 
 aside a.button {

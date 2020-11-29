@@ -573,11 +573,16 @@ header a.button {
     background: transparent url(../images/github-button.png) 0 0 no-repeat
 }
 
+header #menu{
+    list-style-type: none;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}
+
 header a.menu {
-    position: absolute;
-    top: 0;
-    right: 0;
-    color : #fff
+    color : #fff;
+    padding: 10px 20px;
 }
 
 aside a.button {

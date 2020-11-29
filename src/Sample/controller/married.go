@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"SampleGo/src/Sample/model"
 	"SampleGo/src/Sample/viewmodel"
 	"encoding/json"
 	"html/template"
@@ -22,7 +23,7 @@ func (m married) handleMarried(w http.ResponseWriter, r *http.Request) {
 	m.marriedTemplate.Execute(w, vm)
 }
 
-func prepare(data []result) []viewmodel.ResultVm {
+func prepare(data []model.Result) []viewmodel.ResultVm {
 	r := make([]viewmodel.ResultVm, len(data))
 	for i := 0; i < len(data); i++ {
 		vm := dataToVm(data[i])
@@ -31,7 +32,7 @@ func prepare(data []result) []viewmodel.ResultVm {
 	return r
 }
 
-func dataToVm(d result) viewmodel.ResultVm {
+func dataToVm(d model.Result) viewmodel.ResultVm {
 	return viewmodel.ResultVm{
 		Name:   d.Name,
 		Size:   len(d.Values),
@@ -39,7 +40,7 @@ func dataToVm(d result) viewmodel.ResultVm {
 	}
 }
 
-func prepare2(data []value) []viewmodel.ValueVm {
+func prepare2(data []model.Value) []viewmodel.ValueVm {
 	r := make([]viewmodel.ValueVm, len(data))
 	for i := 0; i < len(data); i++ {
 		vm := dataToVm2(data[i])
@@ -48,40 +49,20 @@ func prepare2(data []value) []viewmodel.ValueVm {
 	return r
 }
 
-func dataToVm2(d value) viewmodel.ValueVm {
+func dataToVm2(d model.Value) viewmodel.ValueVm {
 	return viewmodel.ValueVm{
 		Year: d.Year,
 		Val:  d.Val,
 	}
 }
 
-type data struct {
-	TotalRecords  int
-	VariableID    int
-	MeasureUnitID int
-	AggregateID   int
-	Results       []result
-}
-
-type result struct {
-	ID     string
-	Name   string
-	Values []value
-}
-
-type value struct {
-	Year   string
-	Val    float64
-	AttrID int
-}
-
-func test() data {
+func test() model.Data {
 	resp2, err2 := http.Get("https://bdl.stat.gov.pl/api/v1/data/by-variable/450543?aggregate-id=1&format=json")
 	body2, err2 := ioutil.ReadAll(resp2.Body)
 	if err2 != nil {
 		panic(err2.Error())
 	}
-	var data2 data
+	var data2 model.Data
 	json.Unmarshal(body2, &data2)
 	return data2
 }

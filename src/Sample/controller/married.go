@@ -31,7 +31,7 @@ func (m married) handleMarried2(w http.ResponseWriter, r *http.Request) {
 	m.overviewTemplate.Execute(w, vm)
 }
 
-func prepare(data []model.Result) []viewmodel.ResultVm {
+func prepare(data []model.MyResult) []viewmodel.ResultVm {
 	r := make([]viewmodel.ResultVm, len(data))
 	for i := 0; i < len(data); i++ {
 		vm := dataToVm(data[i])
@@ -40,7 +40,7 @@ func prepare(data []model.Result) []viewmodel.ResultVm {
 	return r
 }
 
-func dataToVm(d model.Result) viewmodel.ResultVm {
+func dataToVm(d model.MyResult) viewmodel.ResultVm {
 	return viewmodel.ResultVm{
 		Name:   d.Name,
 		Size:   len(d.Values),

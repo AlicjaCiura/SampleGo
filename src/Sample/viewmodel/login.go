@@ -10,7 +10,7 @@ type Login struct {
 func NewLogin() Login {
 	result := Login{
 		Active: "home",
-		Title:  "Lemonade Stand Supply",
+		Title:  "SampleGo",
 	}
 	return result
 }

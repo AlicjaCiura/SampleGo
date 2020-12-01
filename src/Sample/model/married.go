@@ -5,10 +5,10 @@ type Data struct {
 	VariableID    int
 	MeasureUnitID int
 	AggregateID   int
-	Results       []Result
+	Results       []MyResult
 }
 
-type Result struct {
+type MyResult struct {
 	ID     string
 	Name   string
 	Values []Value

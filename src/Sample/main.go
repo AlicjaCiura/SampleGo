@@ -2,8 +2,12 @@ package main
 
 import (
 	"SampleGo/src/Sample/controller"
+	"SampleGo/src/Sample/model"
+
+	"database/sql"
 	"html/template"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"os"
 
@@ -11,7 +15,10 @@ import (
 	"fmt"
 
 	"github.com/fatih/color"
+	_ "github.com/lib/pq"
 )
+
+const passwordSalt = "a99VVoWzmd1C9ujcitK0fIVNE0I5I61AC47C852RoLTsHDyLCltvP+ZHEkIl/2hkzTOW90c3ZEjtYRkdfTWJ1Q=="
 
 type detail struct {
 	Name         string
@@ -31,12 +38,24 @@ type availability struct {
 
 func main() {
 	templates := populateTemplates()
+	db := connectToDatabase()
+	defer db.Close()
 	controller.Start(templates)
 	http.ListenAndServe(":8080", nil)
+
 }
 
 func sayHello(name string) string {
 	return "Hello " + name + ":)"
+}
+
+func connectToDatabase() *sql.DB {
+	db, err := sql.Open("postgres", "postgres://postgres:admin@localhost/postgres?sslmode=disable")
+	if err != nil {
+		log.Fatalln(fmt.Errorf("Unable to connect to database: %v", err))
+	}
+	model.SetDatabase(db)
+	return db
 }
 
 func populateTemplates() map[string]*template.Template {

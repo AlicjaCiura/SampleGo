@@ -13,6 +13,7 @@ var (
 func Start(templates map[string]*template.Template) {
 
 	homeController.homeTemplate = templates["home.html"]
+	homeController.loginTemplate = templates["login.html"]
 	marriedController.marriedTemplate = templates["married.html"]
 	marriedController.overviewTemplate = templates["overview.html"]
 	homeController.registerRoutes()

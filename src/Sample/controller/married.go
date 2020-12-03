@@ -21,6 +21,7 @@ func (m married) registerRoutes() {
 
 func (m married) handleMarried(w http.ResponseWriter, r *http.Request) {
 	datasets := test()
+	model.SaveDb(datasets.Results)
 	vm := viewmodel.NewMarried(prepare(datasets.Results))
 	m.marriedTemplate.Execute(w, vm)
 }

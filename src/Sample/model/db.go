@@ -7,6 +7,7 @@ var db DB
 type DB interface {
 	QueryRow(string, ...interface{}) Row
 	Exec(string, ...interface{}) (Result, error)
+	Prepare(string) (*sql.Stmt, error)
 }
 
 type Row interface {
@@ -27,6 +28,10 @@ func (s sqlDB) QueryRow(query string, args ...interface{}) Row {
 }
 func (s sqlDB) Exec(query string, args ...interface{}) (Result, error) {
 	return s.db.Exec(query, args...)
+}
+
+func (s sqlDB) Prepare(query string) (*sql.Stmt, error) {
+	return s.db.Prepare(query)
 }
 
 func SetDatabase(database *sql.DB) {

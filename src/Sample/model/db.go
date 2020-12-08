@@ -6,6 +6,7 @@ var db DB
 
 type DB interface {
 	QueryRow(string, ...interface{}) Row
+	Query(string, ...interface{}) (*sql.Rows, error)
 	Exec(string, ...interface{}) (Result, error)
 	Prepare(string) (*sql.Stmt, error)
 }
@@ -26,6 +27,11 @@ type sqlDB struct {
 func (s sqlDB) QueryRow(query string, args ...interface{}) Row {
 	return s.db.QueryRow(query, args...)
 }
+
+func (s sqlDB) Query(query string, args ...interface{}) (*sql.Rows, error) {
+	return s.db.Query(query, args...)
+}
+
 func (s sqlDB) Exec(query string, args ...interface{}) (Result, error) {
 	return s.db.Exec(query, args...)
 }

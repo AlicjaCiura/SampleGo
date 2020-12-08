@@ -6,7 +6,10 @@ import (
 	"encoding/json"
 	"html/template"
 	"io/ioutil"
+	"log"
 	"net/http"
+	"os"
+	"strings"
 )
 
 type married struct {
@@ -21,7 +24,11 @@ func (m married) registerRoutes() {
 
 func (m married) handleMarried(w http.ResponseWriter, r *http.Request) {
 	datasets := test()
-	model.SaveDb(datasets.Results)
+	update, _ := model.GetAllRegions()
+	diff := difference(update, datasets.Results)
+	if len(diff) != 0 {
+		model.SaveDb(diff)
+	}
 	vm := viewmodel.NewMarried(prepare(datasets.Results))
 	m.marriedTemplate.Execute(w, vm)
 }
@@ -102,4 +109,23 @@ func dataToVM2(d model.Details) viewmodel.DetailsVm {
 		ID:   d.ID,
 		Link: "/" + d.Name,
 	}
+}
+
+func difference(slice1 []model.MyResult, slice2 []model.MyResult) []model.MyResult {
+	log := log.New(os.Stdout)
+	var diff []model.MyResult
+	for _, s1 := range slice2 {
+		found := false
+		for _, s2 := range slice1 {
+			if strings.Compare(strings.TrimSpace(s1.Name), strings.TrimSpace(s2.Name)) == 0 {
+				found = true
+				log.Infof("	-> Znalezino: %s\n", s1.Name)
+				break
+			}
+		}
+		if !found {
+			diff = append(diff, s1)
+		}
+	}
+	return diff
 }

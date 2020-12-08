@@ -5,7 +5,10 @@ import (
 	"database/sql"
 	"encoding/base64"
 	"fmt"
-	"log"
+
+	"os"
+
+	"github.com/withmandala/go-log"
 
 	"time"
 )
@@ -26,13 +29,14 @@ func (t *User) String() string {
 }
 
 func Login(email, password string) (*User, error) {
+	log := log.New(os.Stdout)
 	result := &User{}
 	hasher := sha512.New()
 	hasher.Write([]byte(passwordSalt))
 	hasher.Write([]byte(email))
 	hasher.Write([]byte(password))
 	pwd := base64.URLEncoding.EncodeToString(hasher.Sum(nil))
-	log.Printf("Data of users: %v\n", email)
+	log.Infof("Data of users: %v\n", email)
 	row := db.QueryRow(`
 		SELECT id, email, firstname, lastname, last_login_date
 		FROM public.user
@@ -41,6 +45,7 @@ func Login(email, password string) (*User, error) {
 	err := row.Scan(&result.ID, &result.Email, &result.FirstName, &result.LastName, &result.LastLogin)
 	switch {
 	case err == sql.ErrNoRows:
+		log.Errorf("User not found, %v", err)
 		return nil, fmt.Errorf("User not found, %v", err)
 	case err != nil:
 		return nil, err
@@ -51,24 +56,26 @@ func Login(email, password string) (*User, error) {
 		SET last_login_date = $1
 		WHERE id = $2`, t, result.ID)
 	if err != nil {
-		log.Printf("Failed to update login time for user %v to %v: %v", result.Email, t, err)
+		log.Infof("Failed to update login time for user %v to %v: %v", result.Email, t, err)
 	}
 	return result, nil
 }
 func AddNewUser(email, firstName, lastName, password string) (*User, error) {
+	log := log.New(os.Stdout)
 	result := &User{}
 	hasher := sha512.New()
 	hasher.Write([]byte(passwordSalt))
 	hasher.Write([]byte(email))
 	hasher.Write([]byte(password))
 	pwd := base64.URLEncoding.EncodeToString(hasher.Sum(nil))
-	log.Printf("Add new user: %v\n", email)
+	log.Infof("Add new user: %v\n", email)
 	row := db.QueryRow(`
 	INSERT INTO public.user (email, firstname, lastname, password)
 	VALUES ($1, $2, $3, $4)`, email, firstName, lastName, pwd)
 	err := row.Scan(&result.ID, &result.Email, &result.FirstName, &result.LastName)
 	switch {
 	case err == sql.ErrNoRows:
+		log.Errorf("User not found, %v", err)
 		return nil, fmt.Errorf("User exists already, %v", err)
 	case err != nil:
 		return nil, err

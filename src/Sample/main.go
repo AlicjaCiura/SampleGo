@@ -37,6 +37,7 @@ type availability struct {
 }
 
 func main() {
+	log := log.New(os.Stdout)
 	templates := populateTemplates()
 	db := connectToDatabase()
 	defer db.Close()

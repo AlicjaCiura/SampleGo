@@ -5,8 +5,9 @@ import (
 	"SampleGo/src/Sample/viewmodel"
 	"fmt"
 	"html/template"
-	"log"
 	"os"
+
+	"github.com/withmandala/go-log"
 
 	"net/http"
 )
@@ -61,7 +62,7 @@ func (h home) handleAccount(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
 		err := r.ParseForm()
 		if err != nil {
-			log.Infof(fmt.Errorf("Error logging in: %v", err))
+			log.Errorf("Error logging in: %v", err)
 		}
 		email := r.Form.Get("email")
 		password := r.Form.Get("psw")

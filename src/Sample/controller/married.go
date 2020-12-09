@@ -6,10 +6,11 @@ import (
 	"encoding/json"
 	"html/template"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"os"
 	"strings"
+
+	"github.com/withmandala/go-log"
 )
 
 type married struct {
@@ -112,14 +113,14 @@ func dataToVM2(d model.Details) viewmodel.DetailsVm {
 }
 
 func difference(slice1 []model.MyResult, slice2 []model.MyResult) []model.MyResult {
-	log := log.New(os.Stdout)
+	logger := log.New(os.Stdout)
 	var diff []model.MyResult
 	for _, s1 := range slice2 {
 		found := false
 		for _, s2 := range slice1 {
 			if strings.Compare(strings.TrimSpace(s1.Name), strings.TrimSpace(s2.Name)) == 0 {
 				found = true
-				log.Infof("	-> Znalezino: %s\n", s1.Name)
+				logger.Infof("	-> Znalezino: %s\n", s1.Name)
 				break
 			}
 		}

@@ -3,13 +3,14 @@ package main
 import (
 	"SampleGo/src/Sample/controller"
 	"SampleGo/src/Sample/model"
+	"os"
+
+	"github.com/withmandala/go-log"
 
 	"database/sql"
 	"html/template"
 	"io/ioutil"
-	"log"
 	"net/http"
-	"os"
 
 	"encoding/json"
 	"fmt"
@@ -42,8 +43,8 @@ func main() {
 	db := connectToDatabase()
 	defer db.Close()
 	controller.Start(templates)
+	log.Infof("App start on: %v:%v", "127.0.0.1", "8080")
 	http.ListenAndServe(":8080", nil)
-
 }
 
 func sayHello(name string) string {
@@ -51,9 +52,10 @@ func sayHello(name string) string {
 }
 
 func connectToDatabase() *sql.DB {
+	log := log.New(os.Stdout)
 	db, err := sql.Open("postgres", "postgres://postgres:admin@localhost/postgres?sslmode=disable")
 	if err != nil {
-		log.Fatalln(fmt.Errorf("Unable to connect to database: %v", err))
+		log.Errorf("Unable to connect to database: %v", fmt.Errorf("Unable to connect to database: %v", err))
 	}
 	model.SetDatabase(db)
 	return db

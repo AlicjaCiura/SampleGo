@@ -6,6 +6,7 @@ import (
 	"github.com/withmandala/go-log"
 )
 
+//Data is struct for data from stats.gov.pl
 type Data struct {
 	TotalRecords  int
 	VariableID    int
@@ -14,6 +15,7 @@ type Data struct {
 	Results       []MyResult
 }
 
+//MyResult is struct for result by region, Name is name of region, Values is list of values
 type MyResult struct {
 	ID     string
 	Name   string
@@ -24,21 +26,25 @@ func (t MyResult) String() string {
 	return t.Name
 }
 
+//Value is struct for values by region, Year is year for values, Val ist values
 type Value struct {
 	Year   string
 	Val    float64
 	AttrID int
 }
 
+//Overview is struct for all informtion from stats.gov.pl
 type Overview struct {
 	Results []Details
 }
 
+//Details is struct
 type Details struct {
 	ID   string
 	Name string
 }
 
+//SaveDb function to save regions to db
 func SaveDb(list []MyResult) (Result, error) {
 
 	logger := log.New(os.Stdout).WithColor()
@@ -63,6 +69,7 @@ func SaveDb(list []MyResult) (Result, error) {
 	return res, nil
 }
 
+//GetAllRegions function to get all regions from db
 func GetAllRegions() ([]MyResult, error) {
 
 	log := log.New(os.Stdout)

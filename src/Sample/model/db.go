@@ -4,17 +4,19 @@ import "database/sql"
 
 var db DB
 
+//DB is a inteface for db
 type DB interface {
 	QueryRow(string, ...interface{}) Row
 	Query(string, ...interface{}) (*sql.Rows, error)
 	Exec(string, ...interface{}) (Result, error)
-	Prepare(string) (*sql.Stmt, error)
 }
 
+//Row is a intrefave for row
 type Row interface {
 	Scan(...interface{}) error
 }
 
+//Result is a intrefave for result
 type Result interface {
 	LastInsertId() (int64, error)
 	RowsAffected() (int64, error)
@@ -36,10 +38,7 @@ func (s sqlDB) Exec(query string, args ...interface{}) (Result, error) {
 	return s.db.Exec(query, args...)
 }
 
-func (s sqlDB) Prepare(query string) (*sql.Stmt, error) {
-	return s.db.Prepare(query)
-}
-
+//SetDatabase function set db
 func SetDatabase(database *sql.DB) {
 	db = &sqlDB{database}
 }

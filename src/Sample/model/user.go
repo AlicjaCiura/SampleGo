@@ -15,6 +15,7 @@ import (
 
 const passwordSalt = "a99VVoWzmd1C9ujcitK0fIVNE0I5I61AC47C852RoLTsHDyLCltvP+ZHEkIl/2hkzTOW90c3ZEjtYRkdfTWJ1Q=="
 
+//User is object with info about user
 type User struct {
 	ID        int
 	Email     string
@@ -24,10 +25,7 @@ type User struct {
 	LastLogin *time.Time
 }
 
-func (t *User) String() string {
-	return t.LastLogin.Format("2020-12-12 12:00")
-}
-
+//Login fucntion to login by emaila and password, return User or error
 func Login(email, password string) (*User, error) {
 	log := log.New(os.Stdout)
 	result := &User{}
@@ -36,7 +34,7 @@ func Login(email, password string) (*User, error) {
 	hasher.Write([]byte(email))
 	hasher.Write([]byte(password))
 	pwd := base64.URLEncoding.EncodeToString(hasher.Sum(nil))
-	log.Infof("Data of users: %v\n", email)
+	log.Infof("Login of users: %v\n", email)
 	row := db.QueryRow(`
 		SELECT id, email, firstname, lastname, last_login_date
 		FROM public.user
@@ -45,8 +43,8 @@ func Login(email, password string) (*User, error) {
 	err := row.Scan(&result.ID, &result.Email, &result.FirstName, &result.LastName, &result.LastLogin)
 	switch {
 	case err == sql.ErrNoRows:
-		log.Errorf("User not found, %v", err)
-		return nil, fmt.Errorf("User not found, %v", err)
+		log.Debugf("User not found, %v", err)
+		return nil, fmt.Errorf("User not found")
 	case err != nil:
 		return nil, err
 	}
@@ -60,6 +58,8 @@ func Login(email, password string) (*User, error) {
 	}
 	return result, nil
 }
+
+//AddNewUser function is a function to add new user to db
 func AddNewUser(email, firstName, lastName, password string) (*User, error) {
 	log := log.New(os.Stdout)
 	result := &User{}
